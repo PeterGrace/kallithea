@@ -1,5 +1,5 @@
 # kallithea
-Docker image that contains kallithea, a DVCS server written in Python.
+Docker image that contains kallithea, a DVCS server written in Python.  The default login in this container is `admin` and password is `K4ll1th34`, obviously please change it if you intend to use this for more than a quick evaluation.
 
 This Docker image exposes port 80 and has two volume export points such that one can make a permanent installation 
 with ephemeral docker containers.
