@@ -1,7 +1,0 @@
-kallithea:
-  image: petergrace/kallithea-docker
-  ports:
-    - "82:80/tcp"
-  volumes:
-    - /volumes/kallithea/data:/opt/kallithea/data/
-    - /volumes/kallithea/repos:/opt/kallithea/repos/
