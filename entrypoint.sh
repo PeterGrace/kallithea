@@ -6,8 +6,18 @@ CFG_FILE=/opt/kallithea/production.ini
 if [ ! -f "${CFG_FILE}" ]
 then
     kallithea-cli config-create ${CFG_FILE} host=0.0.0.0 database_engine=${DB_TYPE}
-    [ ${DB_TYPE} = "sqlite" ] && sed -i \ 
-        's#^sqlalchemy\.url = .*#sqlalchemy.url = sqlite:///%(here)s/cfg/kallithea.db?timeout=60#g' ${CFG_FILE}
+    case ${DB_TYPE} in
+      sqlite)
+        sed -i 's#^sqlalchemy\.url = .*#sqlalchemy.url = sqlite:///%(here)s/cfg/kallithea.db?timeout=60#g' ${CFG_FILE}
+        ;;
+      postgres)
+        sed -i 's#^sqlalchemy\.url = .*#sqlalchemy.url = postgresql://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT:-5432}/${DB_NAME}#g' ${CFG_FILE}
+        ;;
+      mysql)
+        echo >&2 TODO: mysql database setup
+        exit 1
+        ;;
+    esac
 fi
 if [ ! -f "/opt/kallithea/cfg/kallithea.db" ]
 then
