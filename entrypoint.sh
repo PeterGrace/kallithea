@@ -1,6 +1,7 @@
 #!/bin/bash
 
 CFG_FILE=/opt/kallithea/production.ini
+DB_TYPE=sqlite
 
 if [ ! -f "${CFG_FILE}" ]
 then
