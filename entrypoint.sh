@@ -11,7 +11,7 @@ then
         sed -i 's#^sqlalchemy\.url = .*#sqlalchemy.url = sqlite:///%(here)s/cfg/kallithea.db?timeout=60#g' ${CFG_FILE}
         ;;
       postgres)
-        sed -i 's#^sqlalchemy\.url = .*#sqlalchemy.url = postgresql://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT:-5432}/${DB_NAME}#g' ${CFG_FILE}
+        sed -i "s#^sqlalchemy\.url = .*#sqlalchemy.url = postgresql://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT:-5432}/${DB_NAME}#g" ${CFG_FILE}
         ;;
       mysql)
         echo >&2 TODO: mysql database setup
