@@ -15,8 +15,8 @@ getent >/dev/null passwd kallithea || adduser \
     --system --uid 119 --disabled-password --disabled-login --ingroup www-data kallithea
 chown kallithea:www-data /opt/kallithea/
 chown kallithea:www-data /opt/kallithea/kallithea.db
-#chown -R kallithea:www-data /opt/kallithea/repos
-#chown -R kallithea:www-data /opt/kallithea/data
+chown -R kallithea:www-data /opt/kallithea/repos
+chown -R kallithea:www-data /opt/kallithea/data
 
 # start web-server
 gearbox serve -c /opt/kallithea/production.ini --user=kallithea
