@@ -5,7 +5,7 @@ CFG_FILE=/opt/kallithea/production.ini
 
 if [ ! -f "${CFG_FILE}" ]
 then
-    kallithea-cli config-create ${CFG_FILE} host=0.0.0.0
+    kallithea-cli config-create ${CFG_FILE} host=0.0.0.0 database_engine=${DB_TYPE}
     [ ${DB_TYPE} = "sqlite" ] && sed -i \ 
         's#^sqlalchemy\.url = .*#sqlalchemy.url = sqlite:///%(here)s/cfg/kallithea.db?timeout=60#g' ${CFG_FILE}
 fi
