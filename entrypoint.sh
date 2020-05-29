@@ -25,8 +25,8 @@ then
       --user=admin --email=admin@admin.com --password=Administrator \
       --repos=/opt/kallithea/repos --force-yes \
       -c ${CFG_FILE}
-    kallithea-cli front-end-build
 fi
+[ -f /opt/kallithea/stamp_frontend-built ] || { kallithea-cli front-end-build; touch /opt/kallithea/stamp_frontend-built; }
 getent >/dev/null passwd kallithea || adduser \
     --system --uid 119 --disabled-password --disabled-login --ingroup www-data kallithea
 chown kallithea:www-data /opt/kallithea/
