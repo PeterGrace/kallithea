@@ -15,10 +15,11 @@ RUN pip3 install \
 RUN pip3 install kallithea
 RUN npm install npm@latest -g
 RUN mkdir -p /opt/kallithea/data \
-      && mkdir -p /opt/kallithea/repos
+      && mkdir -p /opt/kallithea/repos \
+      && mkdir -p /opt/kallithea/cfg
 
 ADD ./entrypoint.sh /entrypoint.sh
 
 CMD ["/entrypoint.sh"]
-VOLUME ["/opt/kallithea/repos","/opt/kallithea/data"]
+VOLUME ["/opt/kallithea/repos","/opt/kallithea/data","/opt/kallithea/cfg"]
 EXPOSE 5000
