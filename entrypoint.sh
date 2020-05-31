@@ -8,7 +8,8 @@ then
     kallithea-cli config-create ${CFG_FILE} host=0.0.0.0 database_engine=${DB_TYPE}
     case ${DB_TYPE} in
       sqlite)
-        sed -i 's#^sqlalchemy\.url = .*#sqlalchemy.url = sqlite:///%(here)s/cfg/kallithea.db?timeout=60#g' ${CFG_FILE}
+        export DB_NAME=/opt/kallithea/data/kallithea.db
+        sed -i "s#^sqlalchemy\.url = .*#sqlalchemy.url = sqlite://${DB_NAME}?timeout=60#g" ${CFG_FILE}
         ;;
       postgres)
         sed -i "s#^sqlalchemy\.url = .*#sqlalchemy.url = postgresql://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT:-5432}/${DB_NAME}#g" ${CFG_FILE}
@@ -19,7 +20,7 @@ then
         ;;
     esac
 fi
-if [ ! -f "/opt/kallithea/cfg/kallithea.db" ]
+if [ ${DB_TYPE} = sqlite ] && [ ! -f "${DB_NAME}" ]
 then
     kallithea-cli db-create \
       --user=admin --email=admin@admin.com --password=Administrator \
@@ -30,7 +31,6 @@ fi
 getent >/dev/null passwd kallithea || adduser \
     --system --uid 119 --disabled-password --disabled-login --ingroup www-data kallithea
 chown kallithea:www-data /opt/kallithea/
-chown kallithea:www-data /opt/kallithea/cfg/kallithea.db
 chown -R kallithea:www-data /opt/kallithea/repos
 chown -R kallithea:www-data /opt/kallithea/data
 chown -R kallithea:www-data /opt/kallithea/cfg
