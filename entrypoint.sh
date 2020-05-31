@@ -29,7 +29,7 @@ then
 fi
 [ -f /opt/kallithea/stamp_frontend-built ] || { kallithea-cli front-end-build; touch /opt/kallithea/stamp_frontend-built; }
 getent >/dev/null passwd kallithea || adduser \
-    --system --uid 119 --disabled-password --disabled-login --ingroup www-data kallithea
+    --system --no-create-home --uid 119 --disabled-password --disabled-login --ingroup www-data kallithea
 chown kallithea:www-data /opt/kallithea/
 chown -R kallithea:www-data /opt/kallithea/repos
 chown -R kallithea:www-data /opt/kallithea/data
