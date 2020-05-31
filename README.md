@@ -19,3 +19,12 @@ docker host's port 3080.  This repo also includes a fig.yml file if you'd like t
 - Download the kallithea.db sqlite file from this repo's docker/ subdirectory.
 - Place the kallithea.db file in the data folder
 - execute the docker container: `docker run -dp 3080:80 -v /opt/kal/data:/opt/kallithea/data -v /opt/kal/repos:/opt/kallithea/repos petergrace/kallithea`
+
+## Environment variables for configuration
+
+* DB_TYPE: sqlite (default), postgres, mysql
+* DB_NAME: name of the database to use or path of teh sqlite databasefile
+* DB_USER:
+* DB_PASS:
+* DB_HOST:
+* DB_PORT: defaults to 5432 for postgresql
