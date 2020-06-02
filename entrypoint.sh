@@ -1,6 +1,7 @@
 #!/bin/bash
 
 CFG_FILE=/opt/kallithea/production.ini
+KALLITHEA_VERSION=$(pip3 show kallithea | grep ^Version: | cut -d " " -f 2)
 [ -z ${DB_TYPE} ] && DB_TYPE=sqlite
 
 if [ ! -f "${CFG_FILE}" ]
@@ -20,12 +21,23 @@ then
         ;;
     esac
 fi
-if [ ${DB_TYPE} = sqlite ] && [ ! -f "${DB_NAME}" ]
+if [ ! -f /opt/kallithea/data/.kallithea_installed ]
 then
-    kallithea-cli db-create \
-      --user=admin --email=admin@admin.com --password=Administrator \
-      --repos=/opt/kallithea/repos --force-yes \
-      -c ${CFG_FILE}
+    if [ ${DB_TYPE} = sqlite ] && [ ! -f "${DB_NAME}" ]
+    then
+        kallithea-cli db-create \
+          --user=admin --email=admin@admin.com --password=Administrator \
+          --repos=/opt/kallithea/repos --force-yes \
+          -c ${CFG_FILE}
+    fi
+    if [ ${DB_TYPE} = postgres ] || [ ${DB_TYPE} = mysql ]
+    then
+        kallithea-cli db-create \
+          --user=admin --email=admin@admin.com --password=Administrator \
+          --repos=/opt/kallithea/repos \
+          -c ${CFG_FILE}
+    fi
+    echo ${KALLITHEA_VERSION} >/opt/kallithea/data/.kallithea_installed
 fi
 [ -f /opt/kallithea/stamp_frontend-built ] || { kallithea-cli front-end-build; touch /opt/kallithea/stamp_frontend-built; }
 getent >/dev/null passwd kallithea || adduser \
