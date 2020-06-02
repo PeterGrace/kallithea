@@ -1,0 +1,13 @@
+diff -ur kallithea/model/db.py kallithea_mysql/model/db.py
+--- kallithea/model/db.py       2020-06-02 12:00:40.118850577 +0000
++++ kallithea_mysql/model/db.py 2020-06-02 09:05:48.990852385 +0000
+@@ -2304,7 +2304,7 @@
+     user_id = Column(Integer(), ForeignKey('users.user_id'), nullable=False)
+     _public_key = Column('public_key', UnicodeText(), nullable=False)
+     description = Column(UnicodeText(), nullable=False)
+-    fingerprint = Column(String(255), nullable=False, unique=True)
++    fingerprint = Column(String(255), nullable=False)
+     created_on = Column(DateTime(timezone=False), nullable=False, default=datetime.datetime.now)
+     last_seen = Column(DateTime(timezone=False), nullable=True)
+
+

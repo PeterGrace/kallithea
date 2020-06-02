@@ -20,6 +20,7 @@ RUN mkdir -p /opt/kallithea/data \
       && mkdir -p /opt/kallithea/cfg
 
 ADD ./entrypoint.sh /entrypoint.sh
+ADD ./kallithea060_mysql.patch /opt/kallithea/kallithea060_mysql.patch
 
 CMD ["/entrypoint.sh"]
 VOLUME ["/opt/kallithea/repos","/opt/kallithea/data","/opt/kallithea/cfg"]

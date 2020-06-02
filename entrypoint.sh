@@ -17,6 +17,7 @@ then
         ;;
       mysql)
         sed -i "s#^sqlalchemy\.url = .*#sqlalchemy.url = mysql://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT:-3306}/${DB_NAME}#g" ${CFG_FILE}
+        { echo "patching db-model for MySQL"; cd /usr/local/lib/python3.7/dist-packages/kallithea; patch -p 1 </opt/kallithea/kallithea060_mysql.patch; }
         ;;
     esac
 fi
