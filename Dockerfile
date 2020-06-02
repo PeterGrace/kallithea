@@ -8,7 +8,7 @@ RUN apt-get update && \
       python3-pastescript python3-sqlalchemy python3-bcrypt python3-mako \
       python3-decorator python3-waitress python3-bleach python3-dulwich \
       python-ldap python3-click python3-alembic \
-      python3-psycopg2 && \
+      python3-psycopg2 python3-mysqldb && \
     apt-get clean
 RUN pip3 install \
       mercurial backlash gearbox WebHelpers2 paginate-sqlalchemy paginate ipaddr \
