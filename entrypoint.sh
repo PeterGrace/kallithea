@@ -56,7 +56,7 @@ chmod -R o-rx /opt/kallithea/cfg
 
 # repos and sqlite-db
 chown -R ${REPO_USER}:www-data /opt/kallithea/data
-chown -R ${REPO_USER}:www-data /opt/kallithea/repos
+chown ${REPO_USER} /opt/kallithea/repos
 
 # start web-server
 gearbox serve -c ${CFG_FILE} --user=${REPO_USER}
