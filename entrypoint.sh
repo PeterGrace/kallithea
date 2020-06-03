@@ -43,17 +43,20 @@ fi
 
 if [ -n ${REPO_UID} ]
 then
-    export REPO_USER=kallithea
+    export REPO_USER=repos
     getent >/dev/null passwd kallithea || adduser \
       --system --no-create-home --disabled-password --disabled-login --ingroup www-data --uid ${REPO_UID} ${REPO_USER}
 else
     export REPO_USER=www-data
 fi
-chown ${REPO_USER}:www-data /opt/kallithea/
-chown -R ${REPO_USER}:www-data /opt/kallithea/repos
-chown -R ${REPO_USER}:www-data /opt/kallithea/data
-chown -R ${REPO_USER}:www-data /opt/kallithea/cfg
+
+chown www-data:www-data /opt/kallithea/
+chown -R www-data:www-data /opt/kallithea/cfg
 chmod -R o-rx /opt/kallithea/cfg
+
+# repos and sqlite-db
+chown -R ${REPO_USER}:www-data /opt/kallithea/data
+chown -R ${REPO_USER}:www-data /opt/kallithea/repos
 
 # start web-server
 gearbox serve -c ${CFG_FILE} --user=${REPO_USER}
