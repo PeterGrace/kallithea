@@ -40,13 +40,20 @@ then
     echo ${KALLITHEA_VERSION} >/opt/kallithea/data/.kallithea_installed
 fi
 [ -f /opt/kallithea/stamp_frontend-built ] || { kallithea-cli front-end-build; touch /opt/kallithea/stamp_frontend-built; }
-getent >/dev/null passwd kallithea || adduser \
-    --system --no-create-home --uid 119 --disabled-password --disabled-login --ingroup www-data kallithea
-chown kallithea:www-data /opt/kallithea/
-chown -R kallithea:www-data /opt/kallithea/repos
-chown -R kallithea:www-data /opt/kallithea/data
-chown -R kallithea:www-data /opt/kallithea/cfg
+
+if [ -n ${REPO_UID} ]
+then
+    export REPO_USER=kallithea
+    getent >/dev/null passwd kallithea || adduser \
+      --system --no-create-home --disabled-password --disabled-login --ingroup www-data --uid ${REPO_UID} ${REPO_USER}
+else
+    export REPO_USER=www-data
+fi
+chown ${REPO_USER}:www-data /opt/kallithea/
+chown -R ${REPO_USER}:www-data /opt/kallithea/repos
+chown -R ${REPO_USER}:www-data /opt/kallithea/data
+chown -R ${REPO_USER}:www-data /opt/kallithea/cfg
 chmod -R o-rx /opt/kallithea/cfg
 
 # start web-server
-gearbox serve -c ${CFG_FILE} --user=kallithea
+gearbox serve -c ${CFG_FILE} --user=${REPO_USER}
