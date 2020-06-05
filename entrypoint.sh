@@ -1,12 +1,14 @@
 #!/bin/bash
 
-CFG_FILE=/opt/kallithea/production.ini
+CFG_FILE=/opt/kallithea/cfg/production.ini
 KALLITHEA_VERSION=$(pip3 show kallithea | grep ^Version: | cut -d " " -f 2)
 [ -z ${DB_TYPE} ] && DB_TYPE=sqlite
 
 if [ ! -f "${CFG_FILE}" ]
 then
     kallithea-cli config-create ${CFG_FILE} host=0.0.0.0 database_engine=${DB_TYPE}
+    sed -i "s#^cache_dir = .*#cache_dir = /opt/kallithea/data#g" ${CFG_FILE}
+    sed -i "s#^index_dir = .*#index_dir = /opt/kallithea/data/index#g" ${CFG_FILE}
     case ${DB_TYPE} in
       sqlite)
         export DB_NAME=/opt/kallithea/data/kallithea.db
