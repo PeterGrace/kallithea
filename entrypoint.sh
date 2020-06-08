@@ -36,7 +36,7 @@ then
     then
         kallithea-cli db-create \
           --user=admin --email=admin@admin.com --password=Administrator \
-          --repos=/opt/kallithea/repos \
+          --repos=/opt/kallithea/repos --force-no \
           -c ${CFG_FILE}
     fi
     echo ${KALLITHEA_VERSION} >/opt/kallithea/data/.kallithea_installed
