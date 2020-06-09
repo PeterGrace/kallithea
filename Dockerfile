@@ -14,7 +14,7 @@ RUN pip3 install \
       mercurial backlash gearbox WebHelpers2 paginate-sqlalchemy paginate ipaddr \
       gearbox TurboGears2 tgext.routes celery beaker
 RUN npm install npm@latest -g
-RUN pip3 install kallithea
+RUN pip3 install kallithea==0.6.0
 RUN mkdir -p /opt/kallithea/data \
       && mkdir -p /opt/kallithea/repos \
       && mkdir -p /opt/kallithea/cfg
