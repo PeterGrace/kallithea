@@ -25,6 +25,18 @@ case ${DB_TYPE} in
         ;;
     esac
 fi
+
+# setup userid and fix permission for repos
+if [ -n ${REPO_UID} ]
+then
+    export REPO_USER=repos
+    getent >/dev/null passwd kallithea || adduser \
+      --system --no-create-home --disabled-password --disabled-login --ingroup www-data --uid ${REPO_UID} ${REPO_USER}
+else
+    export REPO_USER=www-data
+fi
+chown ${REPO_USER} /opt/kallithea/repos
+
 if [ ! -f /opt/kallithea/data/.kallithea_installed ]
 then
     if [ ${DB_TYPE} = sqlite ] && [ ! -f "${DB_NAME}" ]
@@ -45,22 +57,12 @@ then
 fi
 [ -f /opt/kallithea/stamp_frontend-built ] || { kallithea-cli front-end-build; touch /opt/kallithea/stamp_frontend-built; }
 
-if [ -n ${REPO_UID} ]
-then
-    export REPO_USER=repos
-    getent >/dev/null passwd kallithea || adduser \
-      --system --no-create-home --disabled-password --disabled-login --ingroup www-data --uid ${REPO_UID} ${REPO_USER}
-else
-    export REPO_USER=www-data
-fi
-
 chown www-data:www-data /opt/kallithea/
 chown -R www-data:www-data /opt/kallithea/cfg
 chmod -R o-rx /opt/kallithea/cfg
 
 # repos and sqlite-db
 chown -R ${REPO_USER}:www-data /opt/kallithea/data
-chown ${REPO_USER} /opt/kallithea/repos
 
 # start web-server
 gearbox serve -c ${CFG_FILE} --user=${REPO_USER}
