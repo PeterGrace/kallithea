@@ -7,9 +7,11 @@ KALLITHEA_VERSION=$(pip3 show kallithea | grep ^Version: | cut -d " " -f 2)
 if [ ! -f "${CFG_FILE}" ]
 then
     kallithea-cli config-create ${CFG_FILE} host=0.0.0.0 database_engine=${DB_TYPE}
-    sed -i "s#^cache_dir = .*#cache_dir = /opt/kallithea/data#g" ${CFG_FILE}
+    sed -i "s#^cache_dir = .*#cache_dir = /opt/kallithea/data/cache#g" ${CFG_FILE}
     sed -i "s#^index_dir = .*#index_dir = /opt/kallithea/data/index#g" ${CFG_FILE}
-    case ${DB_TYPE} in
+    sed -i "s#^beaker.cache.data_dir = .*#beaker.cache.data_dir = /opt/kallithea/data/breaker-cache/data#g" ${CFG_FILE}
+    sed -i "s#^beaker.cache.lock_dir = .*#beaker.cache.lock_dir = /opt/kallithea/data/breaker-cache/lock#g" ${CFG_FILE}
+case ${DB_TYPE} in
       sqlite)
         export DB_NAME=/opt/kallithea/data/kallithea.db
         sed -i "s#^sqlalchemy\.url = .*#sqlalchemy.url = sqlite://${DB_NAME}?timeout=60#g" ${CFG_FILE}
