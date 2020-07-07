@@ -6,6 +6,7 @@ KALLITHEA_VERSION=$(pip3 show kallithea | grep ^Version: | cut -d " " -f 2)
 
 if [ ! -f "${CFG_FILE}" ]
 then
+    echo "-- creating initial config-file for db-type ${DB_TYPE} --"
     kallithea-cli config-create ${CFG_FILE} host=0.0.0.0 database_engine=${DB_TYPE}
     sed -i "s#^cache_dir = .*#cache_dir = /opt/kallithea/data/cache#g" ${CFG_FILE}
     sed -i "s#^index_dir = .*#index_dir = /opt/kallithea/data/index#g" ${CFG_FILE}
@@ -29,16 +30,19 @@ fi
 # setup userid and fix permission for repos
 if [ -n ${REPO_UID} ]
 then
+    echo "-- creating username repos with uid ${REPO_UID} --"
     export REPO_USER=repos
     getent >/dev/null passwd kallithea || adduser \
       --system --no-create-home --disabled-password --disabled-login --ingroup www-data --uid ${REPO_UID} ${REPO_USER}
 else
+    echo "-- creating default username repos --"
     export REPO_USER=www-data
 fi
 chown ${REPO_USER} /opt/kallithea/repos
 
 if [ ! -f /opt/kallithea/data/.kallithea_installed ]
 then
+    echo "-- populating initial database --"
     if [ ${DB_TYPE} = sqlite ] && [ ! -f "${DB_NAME}" ]
     then
         kallithea-cli db-create \
