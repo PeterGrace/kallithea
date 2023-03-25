@@ -1,11 +1,14 @@
 #!/bin/bash
 if [ ! -f "/opt/kallithea/production.ini" ]
 then
-    paster make-config Kallithea /opt/kallithea/production.ini
-    sed -i 's#127.0.0.1#0.0.0.0#g' /opt/kallithea/production.ini
+    kallithea-cli config-create /opt/kallithea/production.ini host=0.0.0.0
 fi
-if [ ! -f "/opt/kallithea/data/kallithea.db" ]
+if [ ! -f "/opt/kallithea/kallithea.db" ]
 then
-    paster setup-db -q --user=admin --email=admin@admin.com --password=Administrator --repos=/opt/kallithea/repos --force-yes /opt/kallithea/production.ini
+    kallithea-cli db-create \
+      --user=admin --email=admin@admin.com --password=Administrator \
+      --repos=/opt/kallithea/repos --force-yes \
+      -c /opt/kallithea/production.ini
+    kallithea-cli front-end-build
 fi
-paster serve /opt/kallithea/production.ini
+gearbox serve -c /opt/kallithea/production.ini
